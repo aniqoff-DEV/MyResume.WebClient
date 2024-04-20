@@ -1,16 +1,20 @@
 ﻿@inherits LayoutComponentBase
 
 <FluentLayout>
-    <FluentHeader Style="background-color:burlywood">
-        My Resume
+    <FluentHeader Style="background-color:burlywood" Height="80">
+        <ChildContent>
+            <h3>My Resume - сайт по онлайн рекрутингу </h3>
+            <img src="./icons/order-ok.png" width="50" height="50" />
+        </ChildContent>        
     </FluentHeader>
-    <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
+
+    <FluentStack Class="main" Orientation="Orientation.Horizontal">
         <NavMenu/>
         <FluentBodyContent>
             <ChildContent>
-                <div class="content">
+                <FluentBodyContent>
                     @Body
-                </div>
+                </FluentBodyContent>
             </ChildContent>
         </FluentBodyContent>
     </FluentStack>    

@@ -1,10 +1,14 @@
-﻿<div class="navmenu">
+﻿
+
+<div class="navmenu" style="margin:5px;">
     <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
         <FluentNavMenu Id="main-menu" Width="250" Collapsible="true" Title="Navigation menu">
-            <FluentNavLink Href="/home" Text="Home">Главная страница</FluentNavLink>
-            <FluentNavLink Href="/profile" Text="Home">Профиль</FluentNavLink>
+            <FluentNavLink Icon="@(new Icons.Regular.Size24.Home())" Href="/" Text="Home">Главная страница</FluentNavLink>
+            <FluentNavLink Icon="@(new Icons.Regular.Size24.Person())" Href="/profile">Профиль</FluentNavLink>
+            <FluentNavLink Icon="@(new Icons.Regular.Size24.News())" Href="/mymessage">Мои сообщения</FluentNavLink>
 
-            <FluentNavLink Href="/about" Text="Home">О нас</FluentNavLink>
+            <FluentNavLink Icon="@(new Icons.Regular.Size24.Info())" Href="/about">О нас</FluentNavLink>
         </FluentNavMenu>
     </nav>
 </div>
+

@@ -11,10 +11,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components" Version="4.6.1" />
+    <PackageReference Include="Microsoft.FluentUI.AspNetCore.Components.Icons" Version="4.6.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\" />
+    <None Include="wwwroot\icons\order-ok.png" />
   </ItemGroup>
 
 </Project>

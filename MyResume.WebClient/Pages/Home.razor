@@ -1,10 +1,14 @@
-﻿@page "/home"
+﻿@page "/"
+@using MyResume.WebClient.Components
+@using MyResume.WebClient.Enums
 
 <PageTitle>My Resume: Главная</PageTitle>
 
-<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Left" VerticalAlignment="VerticalAlignment.Top">
-    <div>
-        <FluentSearch Placeholder="Поиск"/>
-        <br />
-    </div>
+<FluentStack Orientation="Orientation.Vertical" Width="80%" Style="padding-top:10px;">    
+        <HomeFilter />
+        <ListCard _SelectedFilter="selectedFilter" />
 </FluentStack>
+
+@code{
+    private SelectedFilter? selectedFilter { get; set; } = SelectedFilter.OnVacancy;
+}

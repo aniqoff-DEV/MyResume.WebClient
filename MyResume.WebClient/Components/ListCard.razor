@@ -1,0 +1,35 @@
+﻿@using MyResume.WebClient.Components.Cards
+@using MyResume.WebClient.Enums
+
+<FluentStack Orientation="Orientation.Vertical">
+    @if(_SelectedFilter == null)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            <FluentCard Class="card-padding" Width="100%">
+                <FluentSkeleton Shape="SkeletonShape.Circle" Shimmer="true"></FluentSkeleton>
+                <FluentSkeleton Height="10px" Width="100%" Shimmer="true"></FluentSkeleton>
+                <FluentSkeleton Height="10px" Width="100%" Shimmer="true"></FluentSkeleton>
+                <FluentSkeleton Height="10px" Width="100%" Shimmer="true"></FluentSkeleton>
+                <FluentSkeleton Width="100%" Height="30px" Shimmer="true"></FluentSkeleton>
+            </FluentCard>
+        }
+    }
+    @if (_SelectedFilter == SelectedFilter.OnVacancy)
+    {
+        <VacancyCard/>
+    }
+    else if (_SelectedFilter == SelectedFilter.OnResume)
+    {        
+        <ResumeCard/>
+    }
+    else if (_SelectedFilter == SelectedFilter.OnCompany)
+    {
+        <CompanyCard/>
+    }
+</FluentStack>
+
+@code {
+    [Parameter]
+    public SelectedFilter? _SelectedFilter { get; set; }
+}
