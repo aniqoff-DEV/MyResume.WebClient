@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyResume.WebClient", "MyResume.WebClient\MyResume.WebClient.csproj", "{3A3E3D43-C1A2-421E-9380-494EDEF3F904}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyResume.WebClient.Application", "MyResume.WebClient.Application\MyResume.WebClient.Application.csproj", "{FC7DAE81-3B0A-4AAC-A9F4-C3DCFE42A6E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyResume.WebClient.Application", "MyResume.WebClient.Application\MyResume.WebClient.Application.csproj", "{FC7DAE81-3B0A-4AAC-A9F4-C3DCFE42A6E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

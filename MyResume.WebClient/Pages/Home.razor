@@ -4,11 +4,20 @@
 
 <PageTitle>My Resume: Главная</PageTitle>
 
-<FluentStack Orientation="Orientation.Vertical" Width="80%" Style="padding-top:10px;">    
-        <HomeFilter />
-        <ListCard _SelectedFilter="selectedFilter" />
+<FluentStack Orientation="Orientation.Vertical" Width="80%" Style="padding-top:10px;">
+    <HomeFilter OnClickSelectedFilter="@Selected" />
+    <ListCard _SelectedFilter="_selectedFilter" />
 </FluentStack>
 
 @code{
-    private SelectedFilter? selectedFilter { get; set; } = SelectedFilter.OnVacancy;
+    private SelectedFilter? _selectedFilter { get; set; } 
+
+    protected override void OnInitialized()
+    {
+        _selectedFilter = SelectedFilter.OnVacancy;
+    }
+
+    private void Selected(SelectedFilter selectedFilter){
+        _selectedFilter = selectedFilter;
+    }
 }
