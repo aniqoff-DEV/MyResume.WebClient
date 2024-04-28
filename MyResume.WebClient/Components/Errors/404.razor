@@ -1,0 +1,9 @@
+﻿@page "/404"
+
+<h1>@message</h1>
+
+@code{
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public string message { get; set; }
+}
