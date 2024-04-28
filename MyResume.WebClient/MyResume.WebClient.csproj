@@ -19,4 +19,8 @@
     <None Include="wwwroot\icons\order-ok.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MyResume.WebClient.Application\MyResume.WebClient.Application.csproj" />
+  </ItemGroup>
+
 </Project>

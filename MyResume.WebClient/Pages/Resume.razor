@@ -1,0 +1,44 @@
+﻿@page "/resume"
+@inject IJobSeekerService jobSeekerService
+@using MyResume.WebClient.Application.Responses.JobSeekerResponses
+
+<PageTitle>Резюме: @JobSeeker!.FullName @(JobSeeker!.BranchName ?? "")</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" Style="background-color: white; width:80%; margin-top:10px; padding:20px;">
+    <FluentStack Orientation="Orientation.Horizontal">
+        <FluentPersona Status="PresenceStatus.Available"
+                       ImageSize="50px"
+                       Initials="LY">
+        </FluentPersona>
+        <FluentLabel MarginBlock="1px" Typo="Typography.H1" Color="Color.Success">@JobSeeker!.FullName</FluentLabel>
+        <FluentLabel MarginBlock="1px" Typo="Typography.H1" Color="Color.Accent">@(JobSeeker!.BranchName ?? "")</FluentLabel>
+    </FluentStack>
+    <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
+
+    <FluentLabel MarginBlock="1px" Typo="Typography.H2">@(JobSeeker.CityName ?? "")</FluentLabel>
+    <FluentLabel MarginBlock="1px" Typo="Typography.H3">Желамая зарплата: 100 000р.</FluentLabel>
+
+    <FluentTextArea Disabled="true" Appearance="FluentInputAppearance.Outline" Cols="150" Rows="10" Style="height:100px;"
+                    Placeholder="@JobSeeker!.Description"></FluentTextArea>
+</FluentStack>
+
+
+@code{
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid Id { get; set; }
+
+    public InfoOnCardJobSeekerResponse? JobSeeker {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            JobSeeker = await jobSeekerService.GetInfoOnCardById(Id);
+        }
+        catch (Exception ex)
+        {
+            Navigation.NavigateTo($"/404{ex.Message}");
+        }
+    }
+}
