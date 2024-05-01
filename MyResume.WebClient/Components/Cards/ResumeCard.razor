@@ -5,8 +5,9 @@
 
         <FluentStack Orientation="Orientation.Horizontal" Width="100%">
             <FluentPersona Status="PresenceStatus.Available"
-                           ImageSize="50px"
-                           Initials="LY">
+                           ImageSize="44px"
+                           Image="@imageDataURL"
+                           Initials="@initials">
             </FluentPersona>
             <FluentLabel MarginBlock="1px" Typo="Typography.H2" Alignment="HorizontalAlignment.Start" Color="Color.Success">@JobSeekerOnCard.FullName</FluentLabel>
             <FluentLabel MarginBlock="1px" Typo="Typography.H2" Alignment="HorizontalAlignment.Center" Color="Color.Accent">| @(JobSeekerOnCard.BranchName ?? " ")</FluentLabel>
@@ -28,6 +29,19 @@
 @code {
     [Parameter]
     public InfoOnCardJobSeekerResponse JobSeekerOnCard { get; set; }
+    private string imageDataURL { get; set; }
+    private string initials;
+
+    protected override void OnInitialized()
+    {
+        initials = JobSeekerOnCard.FullName.First().ToString();
+
+        if (JobSeekerOnCard.Avatar is not null)
+        {
+            var imagesrc = Convert.ToBase64String(JobSeekerOnCard.Avatar);
+            imageDataURL = string.Format("data:image/jpeg+jpg+png;base64,{0}", imagesrc);
+        }
+    }
 
     private void GoToAbout()
     {
