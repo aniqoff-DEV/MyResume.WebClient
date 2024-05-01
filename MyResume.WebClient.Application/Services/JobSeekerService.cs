@@ -14,16 +14,16 @@ namespace MyResume.WebClient.Application.Services
             _url = BaseUrlConstant.JOBSEEKER_URL;
         }
 
-        public async Task<InfoOnCardJobSeekerResponse> GetInfoOnCardById(Guid jobSeekerId) ///
+        public async Task<InfoOnPageJobSeekerResponse> GetInfoOnPageById(Guid jobSeekerId) ///
         {
-            InfoOnCardJobSeekerResponse? jobSeeker = null;
-            HttpResponseMessage response = await _httpClient.GetAsync($"{_url}/{JobSeekerUrlConstant.GET_SMALL_INFO_BY_ID}{jobSeekerId}");
+            InfoOnPageJobSeekerResponse? jobSeeker = null;
+            HttpResponseMessage response = await _httpClient.GetAsync($"{_url}/{JobSeekerUrlConstant.GET_PAGE_INFO_BY_ID}{jobSeekerId}");
 
             if (response.IsSuccessStatusCode)
             {
                 string content = await response.Content.ReadAsStringAsync();
 
-                jobSeeker = JsonSerializer.Deserialize<InfoOnCardJobSeekerResponse>(content, _jsonSerializerOptions)!;
+                jobSeeker = JsonSerializer.Deserialize<InfoOnPageJobSeekerResponse>(content, _jsonSerializerOptions)!;
             }
             else
             {

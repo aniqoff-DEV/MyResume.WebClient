@@ -1,6 +1,6 @@
-﻿@using MyResume.WebClient.Application.Responses.LocationResponses
-@implements IDialogContentComponent<CityResponse>
-@inject ICityService cityService
+﻿@using MyResume.WebClient.Application.Responses.BranchResponses
+@implements IDialogContentComponent<BranchResponse>
+@inject IBranchService branchService
 
 <!-- Header -->
 <FluentDialogHeader ShowDismiss="true">
@@ -14,11 +14,11 @@
 
 <!-- Body -->
 <FluentDialogBody>
-    <FluentSelect TOption="CityResponse"
+    <FluentSelect TOption="BranchResponse"
                   Label="Выберите город"
-                  Items="Cities"
+                  Items="Branches"
                   Width="300px"
-                  Height="100px"
+                  Height="200px"
                   OptionText="@(p => p.Name)"
                   @bind-SelectedOption="@Content" />
 </FluentDialogBody>
@@ -39,19 +39,19 @@
     [CascadingParameter]
     public FluentDialog Dialog { get; set; } = default!;
     [Parameter]
-    public CityResponse Content { get; set; } = default!;
+    public BranchResponse Content { get; set; } = default!;
 
-    private List<CityResponse> Cities { get; set; }
+    private List<BranchResponse> Branches { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Cities = await LoadCities();
+        Branches = await LoadCities();
     }
 
-    public async Task<List<CityResponse>> LoadCities()
+    public async Task<List<BranchResponse>> LoadCities()
     {
-        var cities = await cityService.GetAll(10);
-        return cities;
+        var branches = await branchService.GetAll();
+        return branches;
     }
 
     private async Task SaveAsync()
@@ -64,3 +64,4 @@
         await Dialog.CancelAsync();
     }
 }
+

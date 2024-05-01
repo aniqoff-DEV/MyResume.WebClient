@@ -1,0 +1,69 @@
+﻿@using MyResume.WebClient.Application.Responses.JobSeekerResponses
+@using MyResume.WebClient.Components.Cards
+@using MyResume.WebClient.Dialogs
+@using MyResume.WebClient.Application.Responses.BranchResponses
+@using MyResume.WebClient.Application.Responses.LocationResponses
+@inject IJobSeekerService jobSeekerService
+
+<FluentToolbar id="toolbar-fluent-components-two" style="width:100%; padding:15px; margin-bottom: 5px;">
+    <FluentNumberField style="margin:5px;" Step="10000" Min="minSalary" @bind-Value="minSalary" Appearance="FluentInputAppearance.Filled"
+                       Placeholder="от" Label="Укажите запрлату от:"></FluentNumberField>
+    <FluentNumberField style="margin:5px;" Step="10000" Min="@minSalary.ToString()" @bind-Value="maxSalary" Appearance="FluentInputAppearance.Filled"
+                       Placeholder="до" Label="до:"></FluentNumberField>
+
+    <FluentButton style="margin:5px;" Appearance="Appearance.Lightweight" OnClick="OpenCityDialog">@(city is null ? cityHolder : city.Name)</FluentButton>
+    <FluentButton style="margin:5px;" Appearance="Appearance.Lightweight" OnClick="OpenBranchDialog">@(branch is null ? specializationHolder : branch.Name)</FluentButton>
+
+    <FluentButton style="margin:5px;" Appearance="Appearance.Accent" OnClick="ApplyFilter">Применить</FluentButton>
+</FluentToolbar>
+
+<FluentStack Orientation="Orientation.Vertical">
+    @if (JobSeekerOnCardList is not null)
+        @foreach (var item in JobSeekerOnCardList)
+        {
+            <ResumeCard JobSeekerOnCard="item" />
+        }
+    else
+    {
+        <SkeletonCard />
+    }
+</FluentStack>
+
+@code {
+    private List<InfoOnCardJobSeekerResponse> JobSeekerOnCardList { get; set; }
+
+    private string cityHolder = "Выбрать город";
+    private string specializationHolder = "Выбрать специальность";
+
+    private int maxSalary = 0;
+    private int minSalary = 0;
+    private BranchResponse? branch = null;
+    private CityResponse? city = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadJobSeekerOnCard();
+    }
+
+    private async Task LoadJobSeekerOnCard()
+    {
+        JobSeekerOnCardList = await jobSeekerService.GetInfoOnCardOnList();
+    }
+
+    private void ApplyFilter()
+    {
+        var cards = JobSeekerOnCardList
+        .Where(r => (minSalary == 0 ? r.DesiredSalary >= minSalary || r.DesiredSalary is null : r.DesiredSalary >= minSalary) &&
+        (maxSalary == 0 || maxSalary < minSalary ? true : r.DesiredSalary <= maxSalary) && 
+        (city is null ? true : r.CityName == city.Name) && (branch is null ? true : r.BranchName == branch.Name))
+        .ToList();
+
+        JobSeekerOnCardList = cards;
+    }
+
+    private async Task OpenCityDialog() => 
+        city = await DialogHelper.OpenCityDialog(city, DialogService);
+
+    private async Task OpenBranchDialog() =>
+        branch = await DialogHelper.OpenBranchDialog(branch, DialogService);
+}

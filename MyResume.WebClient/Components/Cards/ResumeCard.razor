@@ -1,6 +1,6 @@
 ﻿@using MyResume.WebClient.Application.Responses.JobSeekerResponses
 
-<FluentCard Class="card-padding cursos" onclick="@GoToAbout" Width="100%">
+<FluentCard Class="card-padding cursor" onclick="@GoToAbout" Width="100%">
     <FluentStack Orientation="Orientation.Vertical">
 
         <FluentStack Orientation="Orientation.Horizontal" Width="100%">
@@ -14,7 +14,7 @@
             
         </FluentStack>
         <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
-        <FluentLabel MarginBlock="1px" Typo="Typography.H2"> Зарплата: от 100 000 р.</FluentLabel>
+        <FluentLabel MarginBlock="1px" Typo="Typography.H2">@(JobSeekerOnCard.DesiredSalary != null ? $" Желаемая зарплата: {JobSeekerOnCard.DesiredSalary.ToString().Insert(3, " ")} р." : "")</FluentLabel>
         <FluentLabel Typo="Typography.EmailHeader"> @(JobSeekerOnCard.Description)</FluentLabel>
     </FluentStack>
 </FluentCard>
@@ -27,7 +27,7 @@
 
 @code {
     [Parameter]
-    public InfoOnCardJobSeekerResponse? JobSeekerOnCard { get; set; }
+    public InfoOnCardJobSeekerResponse JobSeekerOnCard { get; set; }
 
     private void GoToAbout()
     {

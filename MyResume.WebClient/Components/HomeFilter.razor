@@ -8,25 +8,22 @@
     <FluentButton Appearance="CompanyButton" OnClick="@(() => OnSelectedFilter(SelectedFilter.OnCompany))">Компании</FluentButton>
 </FluentToolbar>
 
-
 <div style="width:100%; margin:0;">
         @if (_SelectedFilter == SelectedFilter.OnVacancy)
         {
-            <VacancyToolBarFilter/>
+            <VacancyList/>
         }
         else if (_SelectedFilter == SelectedFilter.OnResume)
         {
-            <ResumeToolBarFilter/>
+            <ResumeList/>
         }
         else if (_SelectedFilter == SelectedFilter.OnCompany)
         {
-            <CompanyToolBarFilter/>
+            <CompanyList/>
         }
 </div>
 
 @code {
-    [Parameter]
-    public EventCallback<SelectedFilter> OnClickSelectedFilter { get; set; }
     public SelectedFilter _SelectedFilter { get; set; }
 
     private Appearance VacancyButton;
@@ -41,10 +38,9 @@
         OnSelectedFilter(_SelectedFilter);
     }
 
-    private async void OnSelectedFilter(SelectedFilter selected)
+    private void OnSelectedFilter(SelectedFilter selected)
     {
         _SelectedFilter = selected;
-        await OnClickSelectedFilter.InvokeAsync(selected);
 
         if (selected == SelectedFilter.OnVacancy)
         {

@@ -1,5 +1,6 @@
-﻿
-<FluentToolbar id="toolbar-fluent-components-two" style="width:100%; padding:15px;">
+﻿@using MyResume.WebClient.Components.Cards
+
+<FluentToolbar id="toolbar-fluent-components-two" style="width:100%; padding:15px; margin-bottom: 5px;">
     <FluentNumberField style="margin:5px;" Step="10000" Min="0" @bind-Value="exampleInt" Appearance="FluentInputAppearance.Filled"
                        Placeholder="от" Label="Укажите запрлату"></FluentNumberField>
     <FluentSelect style="margin:5px;" TOption="string" @bind-SelectedOption=@selectedWorkExperience Label="Опыт работы" Width="200px" Height="250px" />
@@ -12,6 +13,23 @@
     <FluentButton style="margin:5px;" Appearance="Appearance.Accent">Применить</FluentButton>
 </FluentToolbar>
 
+<FluentStack Orientation="Orientation.Vertical">
+    @* @if (JobSeekerOnCardList is not null)
+        @foreach (var item in JobSeekerOnCardList)
+        {
+            <ResumeCard JobSeekerOnCard="item" />
+        }
+    else
+    {
+        <SkeletonCard />
+    } *@
+    <VacancyCard />
+    <VacancyCard />
+    <VacancyCard />
+    <VacancyCard />
+    <VacancyCard />
+    <VacancyCard />
+</FluentStack>
 @code {
     private string? selectedWorkExperience;
     private string? selectedEmploymentType;

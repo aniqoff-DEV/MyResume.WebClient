@@ -16,6 +16,9 @@ namespace MyResume.WebClient
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<IJobSeekerService, JobSeekerService>();
+            builder.Services.AddScoped<ICityService, CityService>();
+            builder.Services.AddScoped<IBranchService, BranchService>();
+
             builder.Services.AddFluentUIComponents();
 
             await builder.Build().RunAsync();
