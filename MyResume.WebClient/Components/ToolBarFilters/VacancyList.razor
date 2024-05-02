@@ -1,23 +1,45 @@
 ﻿@using MyResume.WebClient.Application.Responses.VacancyResponses
+@using MyResume.WebClient.Dialogs
 @using MyResume.WebClient.Components.Cards
+@using MyResume.WebClient.Application.Responses.BranchResponses
+@using MyResume.WebClient.Application.Responses.LocationResponses
+@using MyResume.WebClient.Enums
 @inject IVacancyService vacancyService
 
 <FluentToolbar id="toolbar-fluent-components-two" style="width:100%; padding:15px; margin-bottom: 5px;">
-    <FluentNumberField style="margin:5px;" Step="10000" Min="0" @bind-Value="exampleInt" Appearance="FluentInputAppearance.Filled"
+    <FluentNumberField style="margin:5px;" Step="10000" Min="0" @bind-Value="minSalary" Appearance="FluentInputAppearance.Filled"
                        Placeholder="от" Label="Укажите запрлату"></FluentNumberField>
-    <FluentSelect style="margin:5px;" TOption="string" @bind-SelectedOption=@selectedWorkExperience Label="Опыт работы" Width="200px" Height="250px" />
-    <FluentSelect style="margin:5px;" TOption="string" @bind-SelectedOption=@selectedEmploymentType Label="Тип занятости" Width="200px" Height="250px" />
-    <FluentSelect style="margin:5px;" TOption="string" @bind-SelectedOption=@selectedWorkSchedule Label="График работы" Width="150px" Height="250px" />
 
-    <FluentButton style="margin:5px;" Appearance="Appearance.Lightweight">@cityHolder</FluentButton>
-    <FluentButton style="margin:5px;" Appearance="Appearance.Lightweight">@specializationHolder</FluentButton>
+    <FluentSelect style="margin:5px;" TOption="Experience" @bind-SelectedOption=@selectedWorkExperience
+                  Items="Experience.All"
+                  OptionText="@(e => e.Value)"
+                  Label="Опыт работы" 
+                  Width="200px" 
+                  Height="Auto" />
 
-    <FluentButton style="margin:5px;" Appearance="Appearance.Accent">Применить</FluentButton>
+    <FluentSelect style="margin:5px;" TOption="EmploymentType" @bind-SelectedOption=@selectedEmploymentType
+                  Items="EmploymentType.All"
+                  OptionText="@(et => et.Value)"
+                  Label="Тип занятости"
+                  Width="200px"
+                  Height="Auto" />
+
+    <FluentSelect style="margin:5px;" TOption="Schedule" @bind-SelectedOption=@selectedWorkSchedule
+                  Items="Schedule.All"
+                  OptionText="@(s => s.Value)"
+                  Label="График работы"
+                  Width="150px" 
+                  Height="Auto" />
+
+    <FluentButton style="margin:5px;" Appearance="Appearance.Lightweight" OnClick="OpenCityDialog">@(city is null ? cityHolder : city.Name)</FluentButton>
+    <FluentButton style="margin:5px;" Appearance="Appearance.Lightweight" OnClick="OpenBranchDialog">@(branch is null ? specializationHolder : branch.Name)</FluentButton>
+
+    <FluentButton style="margin:5px;" Appearance="Appearance.Accent" OnClick="ApplyFilter">Применить</FluentButton>
 </FluentToolbar>
 
 <FluentStack Orientation="Orientation.Vertical">
     @if (VacancyOnCardList is not null)
-        @foreach (var item in VacancyOnCardList)
+        @foreach (var item in VacancyOnCardListFilter)
         {
             <VacancyCard Vacancy="item"/>
         }
@@ -28,13 +50,17 @@
 </FluentStack>
 @code {
     private List<InfoOnCardVacancyResponse> VacancyOnCardList { get; set; }
+    private List<InfoOnCardVacancyResponse> VacancyOnCardListFilter { get; set; }
 
-    private string? selectedWorkExperience;
-    private string? selectedEmploymentType;
-    private string? selectedWorkSchedule;
+    private Experience? selectedWorkExperience = null;
+    private EmploymentType? selectedEmploymentType = null;
+    private Schedule? selectedWorkSchedule = null;
+
+    private int minSalary = 0;
     private string cityHolder = "Выбрать город";
     private string specializationHolder = "Выбрать специальность";
-    private int? exampleInt = null;
+    private BranchResponse? branch = null;
+    private CityResponse? city = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -44,5 +70,26 @@
     private async Task LoadJobSeekerOnCard()
     {
         VacancyOnCardList = await vacancyService.GetInfoOnCardOnList();
+        VacancyOnCardListFilter = VacancyOnCardList;
     }
+
+    private void ApplyFilter()
+    {
+        var cards = VacancyOnCardList;
+        var cardsOnFilter = cards
+        .Where(v => (minSalary == 0 ? true : v.Salary >= minSalary) &&
+        (city is null ? true : v.Address.Contains(city.Name)) && (branch is null ? true : v.BranchName == branch.Name) && 
+        (selectedWorkExperience is null ? true : v.Experience == selectedWorkExperience.Value.ToLower()) &&
+        (selectedEmploymentType is null ? true : v.Employment == selectedEmploymentType.Value.ToLower()) &&
+        (selectedWorkSchedule is null ? true : v.ScheduleWork == selectedWorkSchedule.Value.ToLower()))
+        .ToList();
+
+        VacancyOnCardListFilter = cardsOnFilter;
+    }
+
+    private async Task OpenCityDialog() =>
+        city = await DialogHelper.OpenCityDialog(city, DialogService);
+
+    private async Task OpenBranchDialog() =>
+        branch = await DialogHelper.OpenBranchDialog(branch, DialogService);
 }
