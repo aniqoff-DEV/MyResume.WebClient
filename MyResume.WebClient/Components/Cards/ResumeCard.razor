@@ -5,17 +5,17 @@
 
         <FluentStack Orientation="Orientation.Horizontal" Width="100%">
             <FluentPersona Status="PresenceStatus.Available"
-                           ImageSize="44px"
+                           ImageSize="52px"
                            Image="@imageDataURL"
                            Initials="@initials">
             </FluentPersona>
-            <FluentLabel MarginBlock="1px" Typo="Typography.H2" Alignment="HorizontalAlignment.Start" Color="Color.Success">@JobSeekerOnCard.FullName</FluentLabel>
-            <FluentLabel MarginBlock="1px" Typo="Typography.H2" Alignment="HorizontalAlignment.Center" Color="Color.Accent">| @(JobSeekerOnCard.BranchName ?? " ")</FluentLabel>
-            <FluentLabel MarginBlock="1px" Typo="Typography.H2" Alignment="HorizontalAlignment.End" Color="Color.Info">@(JobSeekerOnCard.CityName ?? " ")</FluentLabel>
-            
+            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Alignment="HorizontalAlignment.Center" Color="Color.Accent"> @(JobSeekerOnCard.BranchName ?? JobSeekerOnCard.FullName)</FluentLabel>
+            <FluentDivider Orientation="Orientation.Vertical" Role="DividerRole.Presentation"></FluentDivider>            
+            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Alignment="HorizontalAlignment.End" Color="Color.Info"> @(JobSeekerOnCard.CityName ?? " ")</FluentLabel>
         </FluentStack>
+
         <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
-        <FluentLabel MarginBlock="1px" Typo="Typography.H2">@(JobSeekerOnCard.DesiredSalary != null ? $" Желаемая зарплата: {JobSeekerOnCard.DesiredSalary.ToString().Insert(3, " ")} р." : "")</FluentLabel>
+        <FluentLabel MarginBlock="1px" Typo="Typography.H2">@(JobSeekerOnCard.DesiredSalary != null ? $" Желаемая зарплата: {salary.Insert(salary.Count() - 3, " ")} р." : "")</FluentLabel>
         <FluentLabel Typo="Typography.EmailHeader"> @(JobSeekerOnCard.Description)</FluentLabel>
     </FluentStack>
 </FluentCard>
@@ -31,10 +31,12 @@
     public InfoOnCardJobSeekerResponse JobSeekerOnCard { get; set; }
     private string imageDataURL { get; set; }
     private string initials;
+    private string salary;
 
     protected override void OnInitialized()
     {
         initials = JobSeekerOnCard.FullName.First().ToString();
+        salary = JobSeekerOnCard.DesiredSalary.ToString();
 
         if (JobSeekerOnCard.Avatar is not null)
         {
