@@ -1,7 +1,7 @@
 ﻿@using MyResume.WebClient.Components.ToolBarFilters
 @using MyResume.WebClient.Enums
 
-<FluentToolbar id="toolbar-fluent-components" Style="width:100%; margin:0;">
+<FluentToolbar id="toolbar-fluent-components" Style="width:100%; margin:0;" Class="rounded">
     <FluentSearch Placeholder="@placeholder" @bind-Value=value Style="width:auto; font-size:18px; padding:10px;" AriaLabel="Search" />
     <FluentButton Appearance="VacancyButton" OnClick="@(() => OnSelectedFilter(SelectedFilter.OnVacancy))">Вакансии</FluentButton>
     <FluentButton Appearance="ResumeButton" OnClick="@(() => OnSelectedFilter(SelectedFilter.OnResume))">Резюме</FluentButton>

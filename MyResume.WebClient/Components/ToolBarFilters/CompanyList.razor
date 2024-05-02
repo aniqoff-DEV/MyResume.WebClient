@@ -4,7 +4,7 @@
 @using MyResume.WebClient.Application.Responses.CompanyResponses
 @inject IEmployerService employerService
 
-<FluentToolbar id="toolbar-fluent-components-two" style="width:100%; padding:15px; margin-bottom: 5px;">
+<FluentToolbar id="toolbar-fluent-components-two" style="width:100%; padding:15px; margin-bottom: 5px;" Class="rounded">
     <FluentButton style="margin:5px;" Appearance="Appearance.Lightweight" OnClick="OpenCityDialog">@(city is null ? cityHolder : city.Name)</FluentButton>
     <FluentCheckbox @bind-Value="@isSelectedReputation" Label="Сортировать по рейтингу" />
 
