@@ -19,7 +19,7 @@
 
 <FluentStack Orientation="Orientation.Vertical">
     @if (JobSeekerOnCardList is not null)
-        @foreach (var item in JobSeekerOnCardList)
+        @foreach (var item in JobSeekerOnCardListFilter)
         {
             <ResumeCard JobSeekerOnCard="item" />
         }
@@ -31,6 +31,7 @@
 
 @code {
     private List<InfoOnCardJobSeekerResponse> JobSeekerOnCardList { get; set; }
+    private List<InfoOnCardJobSeekerResponse> JobSeekerOnCardListFilter { get; set; }
 
     private string cityHolder = "Выбрать город";
     private string specializationHolder = "Выбрать специальность";
@@ -48,17 +49,19 @@
     private async Task LoadJobSeekerOnCard()
     {
         JobSeekerOnCardList = await jobSeekerService.GetInfoOnCardOnList();
+        JobSeekerOnCardListFilter = JobSeekerOnCardList;
     }
 
     private void ApplyFilter()
     {
-        var cards = JobSeekerOnCardList
-        .Where(r => (minSalary == 0 ? r.DesiredSalary >= minSalary || r.DesiredSalary is null : r.DesiredSalary >= minSalary) &&
-        (maxSalary == 0 || maxSalary < minSalary ? true : r.DesiredSalary <= maxSalary) && 
-        (city is null ? true : r.CityName == city.Name) && (branch is null ? true : r.BranchName == branch.Name))
-        .ToList();
+        var cards = JobSeekerOnCardList;
+        var cardsOnFilter = cards
+            .Where(r => (minSalary == 0 ? r.DesiredSalary >= minSalary || r.DesiredSalary is null : r.DesiredSalary >= minSalary) &&
+            (maxSalary == 0 || maxSalary < minSalary ? true : r.DesiredSalary <= maxSalary) && 
+            (city is null ? true : r.CityName == city.Name) && (branch is null ? true : r.BranchName == branch.Name))
+            .ToList();
 
-        JobSeekerOnCardList = cards;
+        JobSeekerOnCardListFilter = cardsOnFilter;
     }
 
     private async Task OpenCityDialog() => 
