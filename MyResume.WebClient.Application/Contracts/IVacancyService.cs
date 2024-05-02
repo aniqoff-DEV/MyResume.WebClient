@@ -6,5 +6,6 @@ namespace MyResume.WebClient.Application.Contracts
     {
         Task<List<InfoOnCardVacancyResponse>> GetInfoOnCardOnList();
         Task<InfoOnPageVacancyResponse> GetInfoOnPage(Guid vacancyId);
+        Task<List<InfoOnCardVacancyResponse>> GetInfoOnCardOnListByEmployerId(Guid employerId);
     }
 }

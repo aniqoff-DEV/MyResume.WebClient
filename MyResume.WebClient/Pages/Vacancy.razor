@@ -1,8 +1,10 @@
 ﻿@page "/vacancy"
+@using MyResume.WebClient.Application.Responses.CompanyResponses
 @using MyResume.WebClient.Application.Responses.VacancyResponses
 @using MyResume.WebClient.Application.Services
 @using Markdig;
 @using MyResume.WebClient.Components.Cards
+@inject IEmployerService employerService
 @inject IVacancyService vacancyService
 
 <PageTitle>Вакансия: @CurrentVacancy!.BranchName от @CurrentVacancy.CompanyName</PageTitle>
@@ -31,10 +33,6 @@
         <FluentLabel MarginBlock="1px" Typo="Typography.H5" Alignment="HorizontalAlignment.Start" Color="Color.Info">Занятость: @CurrentVacancy.Employment</FluentLabel>
         <FluentLabel MarginBlock="1px" Typo="Typography.H5" Alignment="HorizontalAlignment.End" Color="Color.Info">График: @CurrentVacancy.ScheduleWork</FluentLabel>
         <FluentSpacer />
-        @* Description *@
-        <FluentLabel MarginBlock="1px" Typo="Typography.H5" Color="Color.Warning">
-            @CurrentVacancy.Description
-        </FluentLabel>
 
         <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
         <FluentSpacer />
@@ -48,7 +46,8 @@
             <FluentLabel MarginBlock="1px" Typo="Typography.H5" Alignment="HorizontalAlignment.End" Color="Color.Info">Почта: @CurrentVacancy.Email</FluentLabel>
         </FluentFooter>
 
-        <CompanyCard/>
+        <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Presentation"></FluentDivider>
+        <CompanyCard Company="company" />
     }
 </FluentStack>
 
@@ -59,6 +58,7 @@
     public Guid Id { get; set; }
 
     public InfoOnPageVacancyResponse? CurrentVacancy { get; set; }
+    private CompanyInfoResponse company { get; set; }
     private MarkupString MarkDownText { get; set; }
     private string imageDataURL { get; set; }
 
@@ -69,6 +69,8 @@
         try
         {
             CurrentVacancy = await vacancyService.GetInfoOnPage(Id);
+            company = await employerService.GetCompanyCardById(CurrentVacancy.EmployerId);
+
             salary = CurrentVacancy.Salary.ToString();
 
             if (CurrentVacancy.File is not null)

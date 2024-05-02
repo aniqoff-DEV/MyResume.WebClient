@@ -1,0 +1,78 @@
+﻿@page "/company"
+@using MyResume.WebClient.Application.Responses.CompanyResponses
+@using MyResume.WebClient.Application.Responses.VacancyResponses
+@using MyResume.WebClient.Components.Cards
+@inject IEmployerService employerService
+@inject IVacancyService vacancyService
+
+<PageTitle>@CurrentCompany!.CompanyName</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" class="rounded" Style="background-color: white; width:80%; margin-top:10px; padding:20px;">
+    @if (CurrentCompany is null)
+    {
+        <InfoSkeleton />
+    }
+    else
+    {
+        <FluentStack Orientation="Orientation.Horizontal" Width="100%">
+            <FluentPersona Status="PresenceStatus.Available"
+                           ImageSize="52px"
+                           Image="@imageDataURL"
+                           Initials="@initials">
+            </FluentPersona>
+            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Alignment="HorizontalAlignment.Center" Color="Color.Success"> @CurrentCompany.CompanyName</FluentLabel>
+            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Alignment="HorizontalAlignment.Center" Color="Color.Accent"> (@CurrentCompany.Address)</FluentLabel>
+            <FluentSpacer />
+            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Alignment="HorizontalAlignment.End" Color="@(CurrentCompany.Reputation < 3 ? Color.Warning : Color.Success)"> @CurrentCompany.Reputation</FluentLabel>
+            <FluentIcon Value="@(new Icons.Regular.Size24.StarSettings())" />
+        </FluentStack>
+
+        <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
+        <FluentLabel Typo="Typography.EmailHeader"> @(CurrentCompany.Description)</FluentLabel>
+        <FluentLabel Typo="Typography.EmailHeader" Color="Color.Info">Почта для связи: @(CurrentCompany.Email)</FluentLabel>
+
+        <FluentFooter>
+            <FluentLabel Alignment="HorizontalAlignment.Start" Typo="Typography.H3" Color="Color.Error"> Вакансии компании:</FluentLabel>
+        </FluentFooter>
+
+        @if (VacancyOnCardList is not null)
+        {
+            @foreach (var item in VacancyOnCardList)
+            {
+                <VacancyCard Vacancy="item" />
+            }
+        }
+    }
+</FluentStack>
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid Id { get; set; }
+
+    public CompanyInfoResponse? CurrentCompany { get; set; }
+    private List<InfoOnCardVacancyResponse> VacancyOnCardList { get; set; }
+
+    private string imageDataURL { get; set; }
+    private string initials;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            CurrentCompany = await employerService.GetCompanyCardById(Id);
+            VacancyOnCardList = await vacancyService.GetInfoOnCardOnListByEmployerId(Id);
+            initials = CurrentCompany.CompanyName.First().ToString();
+
+            if (CurrentCompany.Avatar is not null)
+            {
+                var imagesrc = Convert.ToBase64String(CurrentCompany.Avatar);
+                imageDataURL = string.Format("data:image/jpeg+jpg+png;base64,{0}", imagesrc);
+            }
+        }
+        catch (Exception ex)
+        {
+            Navigation.NavigateTo($"/404{ex.Message}");
+        }
+    }
+}

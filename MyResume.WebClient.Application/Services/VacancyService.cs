@@ -33,6 +33,23 @@ namespace MyResume.WebClient.Application.Services
             return vacancyCards!;
         }
 
+        public async Task<List<InfoOnCardVacancyResponse>> GetInfoOnCardOnListByEmployerId(Guid employerId)
+        {
+            List<InfoOnCardVacancyResponse?> vacancyCards = new();
+            HttpResponseMessage response = await _httpClient.GetAsync($"{_url}/{VacancyUrlConstant.GET_VACANCY_CARDS_BY_EMPLOYER_ID}{employerId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                string content = await response.Content.ReadAsStringAsync();
+
+                vacancyCards = JsonSerializer.Deserialize<List<InfoOnCardVacancyResponse?>>(content, _jsonSerializerOptions)!;
+            }
+            else
+            {
+                Debug.WriteLine("Ответ не соответсвует http 2xx");
+            }
+            return vacancyCards!;
+        }
 
         public async Task<InfoOnPageVacancyResponse> GetInfoOnPage(Guid vacancyId)
         {
