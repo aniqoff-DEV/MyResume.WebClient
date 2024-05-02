@@ -1,10 +1,58 @@
-﻿<FluentToolbar id="toolbar-fluent-components-two" style="width:100%; padding:15px;">
-    <FluentButton style="margin:5px;" Appearance="Appearance.Lightweight">@companyIndustry</FluentButton>
+﻿@using MyResume.WebClient.Components.Cards
+@using MyResume.WebClient.Dialogs
+@using MyResume.WebClient.Application.Responses.LocationResponses
+@using MyResume.WebClient.Application.Responses.CompanyResponses
+@inject IEmployerService employerService
 
-    <FluentButton style="margin:5px;" Appearance="Appearance.Accent">Применить</FluentButton>
+<FluentToolbar id="toolbar-fluent-components-two" style="width:100%; padding:15px; margin-bottom: 5px;">
+    <FluentButton style="margin:5px;" Appearance="Appearance.Lightweight" OnClick="OpenCityDialog">@(city is null ? cityHolder : city.Name)</FluentButton>
+    <FluentCheckbox @bind-Value="@isSelectedReputation" Label="Сортировать по рейтингу" />
+
+    <FluentButton style="margin:5px;" Appearance="Appearance.Accent" OnClick="ApplyFilter">Применить</FluentButton>
 </FluentToolbar>
 
-@code {
-    private string companyIndustry = "Выбрать отрасль компании";
+<FluentStack Orientation="Orientation.Vertical">
+    @if (Companies is not null)
+        @foreach (var item in CompaniesForFilter)
+        {
+            <CompanyCard Company="item" />
+        }
+    else
+    {
+        <SkeletonCard />
+    }
+</FluentStack>
 
+@code {
+    private List<CompanyInfoResponse>? Companies { get; set; }
+    private List<CompanyInfoResponse>? CompaniesForFilter { get; set; }
+
+    private string cityHolder = "Выбрать город";
+    private CityResponse? city = null;
+    private bool isSelectedReputation = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCompanyOnCard();
+    }
+
+    private async Task LoadCompanyOnCard()
+    {
+        Companies = await employerService.GetCompanyCards();
+        CompaniesForFilter = Companies;
+    }
+
+    private void ApplyFilter()
+    {
+        var cards = Companies;
+        var cardsOnFilter = cards
+            .Where(c => (city is null ? true : c.Address.Contains(city.Name)))
+            .OrderByDescending(c => (isSelectedReputation is false? 0 : c.Reputation))
+            .ToList();
+
+        CompaniesForFilter = cardsOnFilter;
+    }
+
+    private async Task OpenCityDialog() =>
+        city = await DialogHelper.OpenCityDialog(city, DialogService);
 }
