@@ -1,4 +1,6 @@
-﻿@using MyResume.WebClient.Components.Cards
+﻿@using MyResume.WebClient.Application.Responses.VacancyResponses
+@using MyResume.WebClient.Components.Cards
+@inject IVacancyService vacancyService
 
 <FluentToolbar id="toolbar-fluent-components-two" style="width:100%; padding:15px; margin-bottom: 5px;">
     <FluentNumberField style="margin:5px;" Step="10000" Min="0" @bind-Value="exampleInt" Appearance="FluentInputAppearance.Filled"
@@ -14,27 +16,33 @@
 </FluentToolbar>
 
 <FluentStack Orientation="Orientation.Vertical">
-    @* @if (JobSeekerOnCardList is not null)
-        @foreach (var item in JobSeekerOnCardList)
+    @if (VacancyOnCardList is not null)
+        @foreach (var item in VacancyOnCardList)
         {
-            <ResumeCard JobSeekerOnCard="item" />
+            <VacancyCard Vacancy="item"/>
         }
     else
     {
         <SkeletonCard />
-    } *@
-    <VacancyCard />
-    <VacancyCard />
-    <VacancyCard />
-    <VacancyCard />
-    <VacancyCard />
-    <VacancyCard />
+    }
 </FluentStack>
 @code {
+    private List<InfoOnCardVacancyResponse> VacancyOnCardList { get; set; }
+
     private string? selectedWorkExperience;
     private string? selectedEmploymentType;
     private string? selectedWorkSchedule;
     private string cityHolder = "Выбрать город";
     private string specializationHolder = "Выбрать специальность";
     private int? exampleInt = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadJobSeekerOnCard();
+    }
+
+    private async Task LoadJobSeekerOnCard()
+    {
+        VacancyOnCardList = await vacancyService.GetInfoOnCardOnList();
+    }
 }

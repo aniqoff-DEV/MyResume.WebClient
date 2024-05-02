@@ -1,20 +1,27 @@
-﻿
+﻿@using MyResume.WebClient.Application.Responses.VacancyResponses
+
 <FluentCard Class="card-padding cursor" Width="100%">
     <FluentStack Orientation="Orientation.Vertical">
 
         <FluentStack Orientation="Orientation.Horizontal" Width="100%">
             <FluentPersona Status="PresenceStatus.Available"
-                           ImageSize="50px"
-                           Initials="LY">
+                           ImageSize="52px"
+                           Image="@imageDataURL"
+                           Initials="@initials">
             </FluentPersona>
 
-            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Alignment="HorizontalAlignment.Start" Color="Color.Success"> Тандер</FluentLabel>
-            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Alignment="HorizontalAlignment.Center" Color="Color.Accent">| Junior C#</FluentLabel>
-            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Alignment="HorizontalAlignment.End" Color="Color.Info">| Краснодар, ул.Мишюстина 12</FluentLabel>
+            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Alignment="HorizontalAlignment.Start" Color="Color.Accent"> @Vacancy.BranchName</FluentLabel>
+            <FluentDivider Orientation="Orientation.Vertical" Role="DividerRole.Presentation"></FluentDivider>
+            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Alignment="HorizontalAlignment.End" Color="Color.Success"> @Vacancy.CompanyName (@Vacancy.Address)</FluentLabel>
         </FluentStack>
+
+        <FluentLabel MarginBlock="1px" Typo="Typography.H5" Alignment="HorizontalAlignment.Center" Color="Color.Info">Опыт работы: @Vacancy.Experience</FluentLabel>
+        <FluentLabel MarginBlock="1px" Typo="Typography.H5" Alignment="HorizontalAlignment.Start" Color="Color.Info">Занятость: @Vacancy.Employment</FluentLabel>
+        <FluentLabel MarginBlock="1px" Typo="Typography.H5" Alignment="HorizontalAlignment.End" Color="Color.Info">График: @Vacancy.ScheduleWork</FluentLabel>
+
         <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
-        <FluentLabel MarginBlock="1px" Typo="Typography.H2"> Зарплата: от 100 000 р.</FluentLabel>
-        <FluentLabel Typo="Typography.EmailHeader"> Наше описание</FluentLabel>
+        <FluentLabel MarginBlock="1px" Typo="Typography.H2"> Зарплата: от @(Vacancy.Salary.ToString().Insert(Vacancy.Salary.ToString().Count() - 3, " ")) р.</FluentLabel>
+        <FluentLabel Typo="Typography.EmailHeader"> @Vacancy.Description</FluentLabel>
     </FluentStack> 
 </FluentCard>
 
@@ -25,5 +32,25 @@
 </style>
 
 @code{
+    [Parameter]
+    public InfoOnCardVacancyResponse Vacancy { get; set; }
 
+    private string imageDataURL { get; set; }
+    private string initials;
+
+    protected override void OnInitialized()
+    {
+        initials = Vacancy.CompanyName.First().ToString();
+
+        if (Vacancy.Avatar is not null)
+        {
+            var imagesrc = Convert.ToBase64String(Vacancy.Avatar);
+            imageDataURL = string.Format("data:image/jpeg+jpg+png;base64,{0}", imagesrc);
+        }
+    }
+
+    private void GoToAbout()
+    {
+        Navigation.NavigateTo($"/vacancy?id={Vacancy.Id}", false, false);
+    }
 }
