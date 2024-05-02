@@ -1,0 +1,96 @@
+﻿@page "/vacancy"
+@using MyResume.WebClient.Application.Responses.VacancyResponses
+@using MyResume.WebClient.Application.Services
+@using Markdig;
+@using MyResume.WebClient.Components.Cards
+@inject IVacancyService vacancyService
+
+<PageTitle>Вакансия: @CurrentVacancy!.BranchName от @CurrentVacancy.CompanyName</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" class="rounded" Style="background-color: white; width:80%; margin-top:10px; padding:20px;">
+    @if (CurrentVacancy is null)
+    {
+        <InfoSkeleton />
+    }
+    else
+    {
+        @* Info *@
+        <FluentStack Orientation="Orientation.Horizontal">
+            <FluentPersona Status="PresenceStatus.Available"
+                           ImageSize="50px"
+                           Image="@imageDataURL"
+                           Initials="?">
+            </FluentPersona>
+            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Color="Color.Accent">@CurrentVacancy!.BranchName</FluentLabel>
+            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Color="Color.Success">@CurrentVacancy.CompanyName (@CurrentVacancy.Address)</FluentLabel>
+        </FluentStack>
+        <FluentLabel MarginBlock="1px" Typo="Typography.H3">Зарплата: @salary.Insert(salary.Count() - 3, " ") р.</FluentLabel>
+        <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
+
+        <FluentLabel MarginBlock="1px" Typo="Typography.H5" Alignment="HorizontalAlignment.Center" Color="Color.Info">Опыт работы: @CurrentVacancy.Experience</FluentLabel>
+        <FluentLabel MarginBlock="1px" Typo="Typography.H5" Alignment="HorizontalAlignment.Start" Color="Color.Info">Занятость: @CurrentVacancy.Employment</FluentLabel>
+        <FluentLabel MarginBlock="1px" Typo="Typography.H5" Alignment="HorizontalAlignment.End" Color="Color.Info">График: @CurrentVacancy.ScheduleWork</FluentLabel>
+        <FluentSpacer />
+        @* Description *@
+        <FluentLabel MarginBlock="1px" Typo="Typography.H5" Color="Color.Warning">
+            @CurrentVacancy.Description
+        </FluentLabel>
+
+        <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
+        <FluentSpacer />
+        @* Resume *@
+        <FluentBodyContent>
+            @MarkDownText
+        </FluentBodyContent>
+        <FluentSpacer />
+
+        <FluentFooter>
+            <FluentLabel MarginBlock="1px" Typo="Typography.H5" Alignment="HorizontalAlignment.End" Color="Color.Info">Почта: @CurrentVacancy.Email</FluentLabel>
+        </FluentFooter>
+
+        <CompanyCard/>
+    }
+</FluentStack>
+
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid Id { get; set; }
+
+    public InfoOnPageVacancyResponse? CurrentVacancy { get; set; }
+    private MarkupString MarkDownText { get; set; }
+    private string imageDataURL { get; set; }
+
+    private string salary;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            CurrentVacancy = await vacancyService.GetInfoOnPage(Id);
+            salary = CurrentVacancy.Salary.ToString();
+
+            if (CurrentVacancy.File is not null)
+                MarkDownText = (MarkupString)Markdown.ToHtml(ReadForBytesFromText(CurrentVacancy.File));
+
+            if (CurrentVacancy.Avatar is not null)
+            {
+                var imagesrc = Convert.ToBase64String(CurrentVacancy.Avatar);
+                imageDataURL = string.Format("data:image/jpeg+jpg+png;base64,{0}", imagesrc);
+            }
+        }
+        catch (Exception ex)
+        {
+            Navigation.NavigateTo($"/404{ex.Message}");
+        }
+    }
+
+    private string ReadForBytesFromText(byte[] byteArray)
+    {
+        var stream = new StreamReader(new MemoryStream(byteArray));
+
+        var text = stream.ReadToEnd();
+        return text;
+    }
+}
