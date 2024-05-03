@@ -2,7 +2,14 @@
 @using MyResume.WebClient.Enums
 
 <FluentToolbar id="toolbar-fluent-components" Style="width:100%; margin:0;" Class="rounded">
-    <FluentSearch Placeholder="@placeholder" @bind-Value=value Style="width:auto; font-size:18px; padding:10px;" AriaLabel="Search" />
+    <FluentSearch Placeholder="@placeholder"
+                  @ref=seacrhCard
+                  @bind-Value=searchValue
+                  @bind-Value:after=HandleSearchInput
+                  Style="width:auto; font-size:18px; padding:10px;"
+                  AriaLabel="Search"
+                  Appearance="FluentInputAppearance.Filled" />
+
     <FluentButton Appearance="VacancyButton" OnClick="@(() => OnSelectedFilter(SelectedFilter.OnVacancy))">Вакансии</FluentButton>
     <FluentButton Appearance="ResumeButton" OnClick="@(() => OnSelectedFilter(SelectedFilter.OnResume))">Резюме</FluentButton>
     <FluentButton Appearance="CompanyButton" OnClick="@(() => OnSelectedFilter(SelectedFilter.OnCompany))">Компании</FluentButton>
@@ -11,31 +18,55 @@
 <div style="width:100%; margin:0;">
         @if (_SelectedFilter == SelectedFilter.OnVacancy)
         {
-            <VacancyList/>
+            <VacancyList @ref="vacancyList" />
         }
         else if (_SelectedFilter == SelectedFilter.OnResume)
         {
-            <ResumeList/>
+            <ResumeList @ref="resumeList" />
         }
         else if (_SelectedFilter == SelectedFilter.OnCompany)
         {
-            <CompanyList/>
+            <CompanyList @ref="companyList" />
         }
 </div>
 
 @code {
     public SelectedFilter _SelectedFilter { get; set; }
 
+    private VacancyList? vacancyList;
+    private ResumeList? resumeList;
+    private CompanyList? companyList;
+    private FluentSearch? seacrhCard;
+
     private Appearance VacancyButton;
     private Appearance ResumeButton;
     private Appearance CompanyButton;
 
     private string placeholder = "Поиск по вакансиям";
-    private string? value;
+    private string searchValue = string.Empty;
 
     protected override void OnInitialized()
     {
         OnSelectedFilter(_SelectedFilter);
+    }
+
+    private void HandleSearchInput()
+    {
+        if (_SelectedFilter == SelectedFilter.OnVacancy)
+        {           
+            vacancyList!.SearchValue = searchValue.ToLower();
+            return;
+        }
+        else if (_SelectedFilter == SelectedFilter.OnResume)
+        {
+            resumeList!.SearchValue = searchValue.ToLower();
+            return;
+        }
+        else if (_SelectedFilter == SelectedFilter.OnCompany)
+        {
+            companyList!.SearchValue = searchValue.ToLower();
+            return;
+        }
     }
 
     private void OnSelectedFilter(SelectedFilter selected)

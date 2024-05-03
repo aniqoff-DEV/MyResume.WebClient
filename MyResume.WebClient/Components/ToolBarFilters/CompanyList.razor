@@ -24,6 +24,8 @@
 </FluentStack>
 
 @code {
+    public string SearchValue { get; set; } = string.Empty;
+
     private List<CompanyInfoResponse>? Companies { get; set; }
     private List<CompanyInfoResponse>? CompaniesForFilter { get; set; }
 
@@ -46,7 +48,10 @@
     {
         var cards = Companies;
         var cardsOnFilter = cards
-            .Where(c => (city is null ? true : c.Address.Contains(city.Name)))
+            .Where(c => (city is null ? true : c.Address.Contains(city.Name)) &&
+            (string.IsNullOrEmpty(SearchValue) ? true : (c.CompanyName.ToLower().Contains(SearchValue) ||
+             c.CompanyName.ToLower().Contains(SearchValue) ||
+             c.Description.ToLower().Contains(SearchValue))))
             .OrderByDescending(c => (isSelectedReputation is false? 0 : c.Reputation))
             .ToList();
 

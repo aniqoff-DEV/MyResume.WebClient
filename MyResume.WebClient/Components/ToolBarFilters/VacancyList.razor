@@ -49,6 +49,8 @@
     }
 </FluentStack>
 @code {
+    public string SearchValue { get; set; } = string.Empty;
+
     private List<InfoOnCardVacancyResponse> VacancyOnCardList { get; set; }
     private List<InfoOnCardVacancyResponse> VacancyOnCardListFilter { get; set; }
 
@@ -81,7 +83,10 @@
         (city is null ? true : v.Address.Contains(city.Name)) && (branch is null ? true : v.BranchName == branch.Name) && 
         (selectedWorkExperience is null ? true : v.Experience == selectedWorkExperience.Value.ToLower()) &&
         (selectedEmploymentType is null ? true : v.Employment == selectedEmploymentType.Value.ToLower()) &&
-        (selectedWorkSchedule is null ? true : v.ScheduleWork == selectedWorkSchedule.Value.ToLower()))
+        (selectedWorkSchedule is null ? true : v.ScheduleWork == selectedWorkSchedule.Value.ToLower()) &&
+        (string.IsNullOrEmpty(SearchValue) ? true : (v.BranchName.ToLower().Contains(SearchValue) ||
+        v.CompanyName.ToLower().Contains(SearchValue) || 
+        v.Description.ToLower().Contains(SearchValue))))
         .ToList();
 
         VacancyOnCardListFilter = cardsOnFilter;
