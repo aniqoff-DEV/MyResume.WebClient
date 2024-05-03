@@ -2,7 +2,7 @@
 
 <div class="navmenu" style="margin:5px;">
     <nav class="sitenav" aria-labelledby="main-menu" onclick="document.getElementById('navmenu-toggle').click();">
-        <FluentNavMenu Id="main-menu" Width="250" Collapsible="true" Title="Navigation menu">
+        <FluentNavMenu Id="main-menu" Width="250" Collapsible="true" Title="Navigation menu" @bind-Expanded=menuExpanded>
             <FluentNavLink Icon="@(new Icons.Regular.Size24.Home())" Href="/" Text="Home">Главная страница</FluentNavLink>
             <FluentNavLink Icon="@(new Icons.Regular.Size24.Person())" Href="/profile">Профиль</FluentNavLink>
             <FluentNavLink Icon="@(new Icons.Regular.Size24.News())" Href="/mymessage">Мои сообщения</FluentNavLink>
@@ -11,4 +11,8 @@
         </FluentNavMenu>
     </nav>
 </div>
+
+@code{
+    private bool menuExpanded = true;
+}
 
