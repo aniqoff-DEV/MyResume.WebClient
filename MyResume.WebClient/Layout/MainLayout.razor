@@ -1,28 +1,34 @@
 ﻿@inherits LayoutComponentBase
 
-<FluentLayout>
-    <FluentHeader Style="background-color:burlywood" Height="80">
-        <ChildContent>
-            <h3>My Resume - сайт по онлайн рекрутингу </h3>
-            <img src="./icons/order-ok.png" width="50" height="50" />
-        </ChildContent>        
-    </FluentHeader>
+<FluentLayout Class="container-fluid px-5">
 
-    <FluentStack Class="main" Orientation="Orientation.Horizontal">
-        <NavMenu/>
-        <FluentBodyContent>
+    <FluentStack Class="main rounded" Orientation="Orientation.Vertical" Style="background-color:#e9d2bd; height: 100%; margin-top: 40px; padding-bottom:40px;">
+        <FluentHeader Style="background-color:#26201a; width:100%;" Class="rounded" Height="80">
             <ChildContent>
-                <FluentBodyContent>
-                    @Body
-                    <FluentDialogProvider />
-                </FluentBodyContent>
+                <FluentSpacer /><FluentSpacer /><FluentSpacer /><FluentSpacer /><FluentSpacer />
+                <h3>My Resume - сайт по онлайн рекрутингу </h3>
+                <FluentSpacer />
+                <img src="./icons/order-ok.png" width="50" height="50" />
+                <FluentSpacer /><FluentSpacer /><FluentSpacer /><FluentSpacer /><FluentSpacer />
             </ChildContent>
-        </FluentBodyContent>
+        </FluentHeader>
+        <FluentStack Orientation="Orientation.Horizontal" Style="padding-right:20px;">
+            <NavMenu />
+            <FluentBodyContent>
+                <ChildContent>
+                    <FluentBodyContent>
+                        @Body
+                        <FluentDialogProvider />
+                    </FluentBodyContent>
+                </ChildContent>
+            </FluentBodyContent>
+        </FluentStack>
+        
     </FluentStack>    
 </FluentLayout>
 
 <style>
     body{
-        background-color: #ffcc99;
+        background-color: #d0a77e;
     }
 </style>
