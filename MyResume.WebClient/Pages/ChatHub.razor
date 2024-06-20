@@ -1,0 +1,67 @@
+﻿@page "/hub"
+@using Microsoft.AspNetCore.SignalR.Client
+@using MyResume.WebClient.Application.Responses.BranchResponses
+@using MyResume.WebClient.Components.Cards
+@attribute [Authorize(Roles = "employer,jobseeker")]
+
+<PageTitle> Мои сообщения </PageTitle>
+
+<AuthorizeView>
+    <FluentToolbar id="toolbar-fluent-components-two" Class="rounded" Style="background-color:white; margin-top:10px;width:95%; padding:15px;">
+        <FluentNumberField style="margin:5px;" Step="10000" Min="minSalary" @bind-Value="minSalary" Appearance="FluentInputAppearance.Filled"
+                           Placeholder="от" Label="Укажите запрлату от:"></FluentNumberField>
+        <FluentNumberField style="margin:5px;" Step="10000" Min="@minSalary.ToString()" @bind-Value="maxSalary" Appearance="FluentInputAppearance.Filled"
+                           Placeholder="до" Label="до:"></FluentNumberField>
+
+        <FluentCheckbox @bind-Value="@isSelectedReputation" Label="Сортировать по рейтингу" />
+        <FluentButton style="margin:5px;" Appearance="Appearance.Lightweight">@(branch is null ? specializationHolder : branch.Name)</FluentButton>
+    </FluentToolbar>
+
+    <FluentStack  Class="hub rounded" Orientation="Orientation.Vertical" Style="width:95%; margin-top:10px; padding:10px;">
+
+        @if (true)
+        {
+            <UserOfMessageCard/>            
+        }
+
+    </FluentStack>
+</AuthorizeView>
+
+<style>
+    .hub {
+        background-color: #26201a;
+    }
+</style>
+
+@code {
+    private string specializationHolder = "Выбрать специальность";
+
+    private BranchResponse? branch = null;
+    private bool isSelectedReputation = false;
+    private int minSalary = 0;
+    private int maxSalary = 0;
+
+    public bool IsConnected => hubConnection?.State == HubConnectionState.Connected;
+
+    private HubConnection? hubConnection;
+    private List<string> messages = new();
+    private string? userInput;
+    private string? messageInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(Navigation.ToAbsoluteUri("/chathub"))
+            .WithAutomaticReconnect()
+            .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            var formattedMessage = $"{user}: {message}";
+            messages.Add(formattedMessage);
+            InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
+    }
+}

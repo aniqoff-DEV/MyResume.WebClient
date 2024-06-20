@@ -1,0 +1,23 @@
+﻿@using MyResume.WebClient.Application.Requests
+
+
+<FluentEditForm Model="@jobSeeker" OnInvalidSubmit="Submit">
+    <FluentStack FluentStack Orientation="Orientation.Vertical" Width="300px">
+        <DataAnnotationsValidator />
+        <FluentTextField style="width: 100%;" Id="fullname" @bind-Value=@jobSeeker.Name>Ваше имя:</FluentTextField>
+        <FluentTextField style="width: 100%;" Id="email" @bind-Value=@jobSeeker.Email>Почта:</FluentTextField>
+        <FluentTextField style="width: 100%;" Id="password" @bind-Value=@jobSeeker.Password>Пароль:</FluentTextField>
+        <FluentValidationSummary />
+        <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit">Зарегистрироваться</FluentButton>
+    </FluentStack>
+</FluentEditForm>
+
+
+@code {
+    private SignUpRequest? jobSeeker = default;
+
+    private async Task Submit()
+    {
+        
+    }
+}

@@ -1,0 +1,29 @@
+﻿@using MyResume.WebClient.Application.Requests
+@using MyResume.WebClient.Application.Responses.LocationResponses
+@using MyResume.WebClient.Helpers
+
+<FluentEditForm Model="@employer" OnInvalidSubmit="Submit">
+    <FluentStack FluentStack Orientation="Orientation.Vertical" Width="300px">
+        <DataAnnotationsValidator />
+        <FluentTextField style="width: 100%;" Id="fullname" @bind-Value=@employer.Name>Название фирмы(компании):</FluentTextField>
+        <FluentTextField style="width: 100%;" Id="email" @bind-Value=@employer.Email>Почта:</FluentTextField>
+        <FluentTextField style="width: 100%;" Id="password" @bind-Value=@employer.Password>Пароль:</FluentTextField>
+        <FluentButton Appearance="Appearance.Lightweight" style="width: 100%;" Id="password" OnClick="OpenCityDialog">@( city is null ?" Выберите ваш город" : city.Name)</FluentButton>
+        <FluentValidationSummary />
+        <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit">Зарегистрироваться</FluentButton>
+    </FluentStack>
+</FluentEditForm>
+
+@code {
+    private SignUpRequest employer = default;
+
+    private CityResponse? city = null;
+
+    private async Task Submit()
+    {
+        employer.CityId = city.Id;
+    }
+
+    private async Task OpenCityDialog() =>
+        city = await DialogHelper.OpenCityDialog(city, DialogService);
+}

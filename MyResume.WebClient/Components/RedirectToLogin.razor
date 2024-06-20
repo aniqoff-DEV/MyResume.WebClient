@@ -1,0 +1,12 @@
+﻿@using MyResume.WebClient.Helpers
+@inject IToastService ToastService
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        Navigation.NavigateTo("/", false, false);
+        await DialogHelper.OpenLoginDialog(DialogService);
+        ToastService.ShowWarning("Страница недоступна неавторизованному пользователю!");
+    }
+}

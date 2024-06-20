@@ -1,0 +1,97 @@
+﻿@using Markdig
+@using MyResume.WebClient.Application.Responses.BranchResponses
+@using MyResume.WebClient.Application.Responses.LocationResponses
+@using MyResume.WebClient.Helpers
+
+<FluentStack Orientation="Orientation.Vertical" Class="rounded" Style="background-color: white; width:80%; margin-top:10px; padding:20px;">
+    <FluentStack Orientation="Orientation.Horizontal">
+        <FluentPersona Status="PresenceStatus.Available"
+                       ImageSize="50px"
+                       Initials="LY">
+        </FluentPersona>
+        <FluentLabel MarginBlock="1px" Typo="Typography.H1" Color="Color.Success">Константинов Андрей</FluentLabel>
+        @if (isEdit)
+        {
+            <FluentButton Appearance="Appearance.Lightweight" OnClick="OpenBranchDialog" IconEnd="@(new Icons.Regular.Size24.DismissCircle().WithColor("red"))">
+                <FluentLabel Typo="Typography.H1" Color="Color.Accent">@(branch is null ? specializationHolder : branch.Name)</FluentLabel>
+            </FluentButton>
+        }
+        else
+        {
+            <FluentLabel MarginBlock="1px" Typo="Typography.H1" Color="Color.Accent">Junior C#</FluentLabel>
+        }
+    </FluentStack>
+    <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
+
+    @if (isEdit)
+    {
+        <FluentButton Appearance="Appearance.Lightweight" OnClick="OpenCityDialog" IconEnd="@(new Icons.Regular.Size24.DismissCircle().WithColor("red"))">
+            <FluentLabel Typo="Typography.H2" Color="Color.Info">@(city is null ? cityHolder : city.Name)</FluentLabel>
+        </FluentButton>
+    }
+    else
+    {
+        <FluentLabel MarginBlock="1px" Typo="Typography.H2" Color="Color.Info">Краснодар</FluentLabel>        
+    }
+
+    <FluentLabel MarginBlock="1px" Typo="Typography.H3">Желамая зарплата: 100 000р.</FluentLabel>
+
+    @if (isEdit)
+    {
+        <FluentTextArea Rows="12" Cols="120" Style="height:100px;" @bind-Value="description">
+        </FluentTextArea>
+    }
+    else
+    {
+        <FluentLabel Typo="Typography.EmailHeader">
+            @description
+        </FluentLabel>
+    }
+
+<FluentStack Orientation="Orientation.Horizontal">
+        <FluentButton Appearance="Appearance.Accent" OnClick="@(() => isEdit = !isEdit)">@(isEdit ? "Отменить" : "Редактировать")</FluentButton>
+        @if(isEdit)
+        {
+            <FluentButton Appearance="Appearance.Accent">Сохранить</FluentButton>
+        }
+        else
+        {
+            <FluentButton Appearance="Appearance.Accent">Изменить персональные данные</FluentButton>
+            <FluentButton BackgroundColor="var(--red-bg)" Color="var(--info)">Выйти из системы</FluentButton>
+        }
+    </FluentStack>
+    <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
+    <div>
+        @if (isEdit)
+        {
+            <FluentTextArea Appearance="FluentInputAppearance.Outline" Cols="150" Rows="10" Style="height:100px;" @oninput="OnTextChanged"></FluentTextArea>
+        }
+        <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
+        @MarkDownText
+    </div>
+</FluentStack>
+
+@code {
+
+    private MarkupString MarkDownText { get; set; }
+    private bool isEdit { get; set; } = false;
+    private string description = "Меня зовут Андрей и я ничанющий разработчик на ASP.NET. Стек: TS,JS,C#,Dapper,React,EF Core, jwt";
+
+    private string cityHolder = "Изменить город";
+    private string specializationHolder = "Изменить специальность";
+
+    private BranchResponse? branch = null;
+    private CityResponse? city = null;
+
+    protected void OnTextChanged(ChangeEventArgs args)
+    {
+        MarkDownText = (MarkupString)Markdown.ToHtml(args.Value.ToString());
+        InvokeAsync(() => StateHasChanged());
+    }
+
+    private async Task OpenCityDialog() =>
+        city = await DialogHelper.OpenCityDialog(city, DialogService);
+
+    private async Task OpenBranchDialog() =>
+        branch = await DialogHelper.OpenBranchDialog(branch, DialogService);
+}

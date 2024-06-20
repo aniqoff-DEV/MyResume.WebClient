@@ -1,0 +1,58 @@
+﻿@using MyResume.WebClient.Components.Emloyer
+@using MyResume.WebClient.Components.JobSeeker
+@using MyResume.WebClient.Enums
+@implements IDialogContentComponent
+
+<FluentCard Class="card-padding" Style="background-color:antiquewhite;" Width="100%">
+    <FluentStack Orientation="Orientation.Vertical" Width="100%">
+        <FluentToolbar id="toolbar-slotted-label" Class="rounded">
+            <FluentLabel>Войти как: </FluentLabel>
+        <FluentButton Appearance="jobseekerButton" OnClick="@(() =>
+        {
+            role = UserRoles.JobSeeker;
+            jobseekerButton = Appearance.Accent;
+            employerButton =  Appearance.Neutral;
+        })">
+                Соискатель
+        </FluentButton>
+        <FluentButton Appearance="employerButton" OnClick="@(() =>
+        {
+            role = UserRoles.Employer;
+            employerButton =  Appearance.Accent;
+            jobseekerButton =  Appearance.Neutral;
+        })">
+                Работодатель
+        </FluentButton>
+        </FluentToolbar>
+
+        @if (role == UserRoles.JobSeeker)
+        {
+            <JobSeekerSignIn />            
+        }
+        else if (role == UserRoles.Employer)
+        {
+            <EmployerSignIn/>
+        }
+    </FluentStack>
+</FluentCard>
+
+
+<style>
+    body{
+        font-size: 18px;
+    }
+</style>
+
+@code {
+    [CascadingParameter]
+    public FluentDialog Dialog { get; set; } = default!;
+
+    private UserRoles role = UserRoles.JobSeeker;
+    private Appearance employerButton;
+    private Appearance jobseekerButton = Appearance.Accent;
+
+    protected override void OnInitialized()
+    {
+        
+    }
+}

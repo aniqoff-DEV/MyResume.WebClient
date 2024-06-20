@@ -1,0 +1,11 @@
+﻿@page "/chat"
+
+@code {
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid MyId { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid YourId { get; set; }
+}

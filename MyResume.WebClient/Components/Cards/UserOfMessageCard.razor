@@ -1,0 +1,24 @@
+﻿
+<FluentCard Class="card-padding" Width="80%" Style="margin: 10px;">
+    <FluentStack Orientation="Orientation.Vertical">
+
+        <FluentStack Orientation="Orientation.Horizontal" Width="100%">
+            <FluentPersona Status="PresenceStatus.Available"
+                           ImageSize="32px"
+                           Initials="?">
+            </FluentPersona>
+            <FluentLabel MarginBlock="1px" Typo="Typography.H3" Alignment="HorizontalAlignment.Center" Color="Color.Success"> Андрей</FluentLabel>
+            <FluentLabel MarginBlock="1px" Typo="Typography.H3" Alignment="HorizontalAlignment.Center" Color="Color.Accent"> Junior C#</FluentLabel>
+            <FluentSpacer />
+            <FluentButton style="margin:5px; font-weight:bold;" BackgroundColor="Yellow">Отклонить</FluentButton>
+            <FluentButton style="margin:5px; font-weight:bold;" BackgroundColor="Green" Color="White">Принять</FluentButton>
+        </FluentStack>
+
+        <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
+        <FluentLabel Typo="Typography.Body"> Сообщение</FluentLabel>
+    </FluentStack>
+</FluentCard>
+
+@code {
+
+}

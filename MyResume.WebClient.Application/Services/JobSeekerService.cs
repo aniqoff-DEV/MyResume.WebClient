@@ -14,7 +14,7 @@ namespace MyResume.WebClient.Application.Services
             _url = BaseUrlConstant.JOBSEEKER_URL;
         }
 
-        public async Task<InfoOnPageJobSeekerResponse> GetInfoOnPageById(Guid jobSeekerId) ///
+        public async Task<InfoOnPageJobSeekerResponse> GetInfoOnPageById(Guid jobSeekerId)
         {
             InfoOnPageJobSeekerResponse? jobSeeker = null;
             HttpResponseMessage response = await _httpClient.GetAsync($"{_url}/{JobSeekerUrlConstant.GET_PAGE_INFO_BY_ID}{jobSeekerId}");

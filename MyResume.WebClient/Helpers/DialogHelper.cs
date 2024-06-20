@@ -1,8 +1,9 @@
 ﻿using Microsoft.FluentUI.AspNetCore.Components;
 using MyResume.WebClient.Application.Responses.BranchResponses;
 using MyResume.WebClient.Application.Responses.LocationResponses;
+using MyResume.WebClient.Dialogs;
 
-namespace MyResume.WebClient.Dialogs
+namespace MyResume.WebClient.Helpers
 {
     public class DialogHelper
     {
@@ -40,6 +41,18 @@ namespace MyResume.WebClient.Dialogs
                 return (BranchResponse)result.Data;
             }
             return branch;
+        }
+
+        public static async Task OpenLoginDialog(IDialogService dialogService)
+        {
+            var dialog = await dialogService.ShowDialogAsync<LoginDialog>(new DialogParameters()
+            {
+                Title = "Войти",
+                PreventDismissOnOverlayClick = true,
+                PreventScroll = true,
+                PrimaryAction = "Остаться",
+                SecondaryAction = "Уйти"
+            });
         }
     }
 }

@@ -1,52 +1,16 @@
 ﻿@page "/profile"
-@using Markdig;
+@using MyResume.WebClient.Components.Emloyer
+@using MyResume.WebClient.Components.JobSeeker
+@using MyResume.WebClient.Enums
+@using MyResume.WebClient.Helpers
+@attribute [Authorize(Roles = "employer,jobseeker")]
 
 <PageTitle>Мой профиль</PageTitle>
 
-<FluentStack Orientation="Orientation.Vertical" Class="rounded" Style="background-color: white; width:80%; margin-top:10px; padding:20px;">
-    <FluentStack Orientation="Orientation.Horizontal">
-        <FluentPersona Status="PresenceStatus.Available"
-                       ImageSize="50px"
-                       Initials="LY">
-        </FluentPersona>
-        <FluentLabel MarginBlock="1px" Typo="Typography.H1" Color="Color.Success">Константинов Андрей</FluentLabel>
-        <FluentLabel MarginBlock="1px" Typo="Typography.H1" Color="Color.Accent">Junior C#</FluentLabel>
-    </FluentStack>
-    <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
+<AuthorizeView Roles="employer">
+    <EmployerProfile />
+</AuthorizeView>
 
-    <FluentLabel MarginBlock="1px" Typo="Typography.H2">Краснодар</FluentLabel>
-    <FluentLabel MarginBlock="1px" Typo="Typography.H3">Желамая зарплата: 100 000р.</FluentLabel>
-
-    <FluentTextArea Disabled="!isEdit" Appearance="FluentInputAppearance.Outline" Cols="150" Rows="10" Style="height:100px;"
-                    Placeholder="Меня зовут Андрей и я ничанющий разработчик на ASP.NET. Стек: TS,JS,C#,Dapper,React,EF Core, jwt"></FluentTextArea>
-
-    <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
-        <FluentStack Orientation="Orientation.Horizontal">
-        <FluentButton Appearance="Appearance.Accent" OnClick="@(() => isEdit = !isEdit)">@(isEdit ? "Отменить" : "Редактировать" )</FluentButton>
-        @if (isEdit)
-        {
-        <FluentButton Appearance="Appearance.Accent">Сохранить</FluentButton>            
-        }
-        </FluentStack>
-    <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
-    <div>
-        @if (isEdit)
-        {
-            <FluentTextArea Appearance="FluentInputAppearance.Outline" Cols="150" Rows="10" Style="height:100px;" @oninput="OnTextChanged"></FluentTextArea>
-        }
-        <FluentDivider Style="width: 100%;" Orientation=Orientation.Horizontal Role="DividerRole.Separator"></FluentDivider>
-        @MarkDownText
-    </div>
-</FluentStack>
-
-@code{
-    
-    private MarkupString MarkDownText { get; set; }
-    private bool isEdit { get; set; } = false;
-
-    protected void OnTextChanged(ChangeEventArgs args)
-    {
-        MarkDownText = (MarkupString)Markdown.ToHtml(args.Value.ToString());
-        InvokeAsync(() => StateHasChanged());
-    }
-}
+<AuthorizeView Roles="jobseeker">
+    <JobSeekerProfile />
+</AuthorizeView>

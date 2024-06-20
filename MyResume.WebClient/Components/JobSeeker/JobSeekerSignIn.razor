@@ -1,0 +1,51 @@
+﻿@using MyResume.WebClient.Application.Exceptions.Base
+@using MyResume.WebClient.Application.Requests
+@using MyResume.WebClient.Helpers
+@inject IJobSeekerService _jobseekerService
+@inject AuthorizeApi _authorize
+
+@if (isLogin)
+{
+    <FluentEditForm Model="@login" OnValidSubmit="Submit">
+        <FluentStack Orientation="Orientation.Vertical" Width="300px">
+                        
+            <FluentTextField style="width: 100%;" Id="email" @bind-Value=@login.Email>Почта:</FluentTextField>
+            <FluentTextField style="width: 100%;" Id="password" @bind-Value=@login.Password>Пароль:</FluentTextField>
+            <FluentValidationSummary />
+            <FluentButton Appearance="Appearance.Lightweight" OnClick="@(() => isLogin = !isLogin)">Зарегистрировать новый аккаунт</FluentButton>
+            <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit">Войти</FluentButton>
+        </FluentStack>
+    </FluentEditForm>
+}
+else
+{
+    <FluentStack Orientation="Orientation.Vertical">
+        <JobSeekerSignUp />
+        <FluentButton Appearance="Appearance.Lightweight" OnClick="@(() => isLogin = !isLogin)">Уже существует аккаунт</FluentButton>
+    </FluentStack>   
+}
+
+@code {
+    private SignInRequest login = new();
+    private bool isLogin = true;
+
+    private async Task Submit()
+    {
+        if (login is null)
+            return;
+
+        try
+        {
+            login.Role = "jobseeker";
+            await _authorize.Login(login);
+
+            Navigation.NavigateTo("/", forceLoad: true);
+            return;
+        }
+        catch (BadRequestException ex)
+        {
+            await DialogService.ShowErrorAsync(ex.Message);
+            return;
+        }
+    }
+}

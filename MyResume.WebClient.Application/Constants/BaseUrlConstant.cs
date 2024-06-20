@@ -9,5 +9,6 @@
         public const string BRANCH_URL = $"{BASE_URL}Branch";
         public const string VACANCY_URL = $"{BASE_URL}Vacancy";
         public const string EMPLOYER_URL = $"{BASE_URL}Employer";
+        public const string AUTHORIZE_URL = $"{BASE_URL}Authorization";
     }
 }

@@ -1,0 +1,52 @@
+﻿@using MyResume.WebClient.Application.Exceptions.Base
+@using MyResume.WebClient.Application.Requests
+@* @inject AuthenticationStateProvider _authStateProvider *@
+
+@if (isLogin)
+{
+    <FluentEditForm Model="@employer" OnInvalidSubmit="Submit">
+        <FluentStack Orientation="Orientation.Vertical" Width="300px">
+
+            <DataAnnotationsValidator />
+            <FluentTextField style="width: 100%;" Id="email" @bind-Value=@employer.Email>Почта:</FluentTextField>
+            <FluentTextField style="width: 100%;" Id="password" @bind-Value=@employer.Password>Пароль:</FluentTextField>
+            <FluentValidationSummary />
+            <FluentButton Appearance="Appearance.Lightweight" OnClick="@(() => isLogin = !isLogin)">Зарегистрировать новый аккаунт</FluentButton>
+            <FluentButton Appearance="Appearance.Accent" Type="ButtonType.Submit">Войти</FluentButton>
+        </FluentStack>
+    </FluentEditForm>
+}
+else
+{
+    <FluentStack Orientation="Orientation.Vertical">
+        <EmployerSignUp />
+        <FluentButton Appearance="Appearance.Lightweight" OnClick="@(() => isLogin = !isLogin)">Уже существует аккаунт</FluentButton>
+    </FluentStack>   
+}
+
+@code {
+    private SignInRequest employer = default;
+
+    private bool isLogin = true;
+
+    private async Task Submit()
+    {
+        try
+        {
+            // string response = await _jobseekerService.Login(jobSeeker);
+
+            // var customAuthStateProvider = (CustomAuthenticationStateProvider)_authStateProvider;
+
+            // await customAuthStateProvider.UpdateAuthenticationState(new UserSession()
+            //     {
+            //         Token = response
+            //     });
+            // Navigation.NavigateTo("/", forceLoad: true);
+        }
+        catch (BadRequestException ex)
+        {
+            await DialogService.ShowErrorAsync(ex.Message);
+        }
+    }
+}
+
